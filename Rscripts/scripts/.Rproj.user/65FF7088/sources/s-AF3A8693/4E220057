@@ -1,0 +1,26 @@
+{
+    "id": "4E220057",
+    "path": "~/UBC/PhDThesis/GBS/Rscripts/scripts/N1-analysis.R",
+    "project_path": "N1-analysis.R",
+    "type": "r_source",
+    "hash": "0",
+    "contents": "",
+    "dirty": false,
+    "created": 1661184285216.0,
+    "source_on_save": false,
+    "relative_order": 12,
+    "properties": {
+        "source_window_id": "",
+        "Source": "Source",
+        "cursorPosition": "88,0",
+        "scrollLine": "0"
+    },
+    "folds": "",
+    "lastKnownWriteTime": 1661202195,
+    "encoding": "UTF-8",
+    "collab_server": "",
+    "source_window": "",
+    "last_content_update": 1661202195765,
+    "read_only": false,
+    "read_only_alternatives": []
+}

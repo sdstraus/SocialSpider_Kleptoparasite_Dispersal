@@ -1,0 +1,68 @@
+locale,Species,Nest,latitude,longitude,elevation,Trail
+jatun sacha,domingo,2017_dom_01,S01¡04.119,W077¡36.971,410,Torres Trail
+jatun sacha,domingo,2017_dom_02,S01.06857¡,W077.61623¡,418,Torres Trail
+jatun sacha,domingo,2017_dom_03,S01.07187¡,W077.61375¡,419,Sendero 03
+jatun sacha,domingo,2017_dom_04,S01.06619¡,W077.61565¡,,No Entre
+jatun sacha,domingo,2017_dom_05,S01.07314¡,W077.61584¡,418,RA4B4- Torre
+jatun sacha,domingo,2017_dom_06,S01.07248¡,W077.61560¡,443,RA4B4- Torre
+jatun sacha,domingo,2017_dom_07,S01.07322¡,W077.61574¡,432,RA4B4- Torre
+jatun sacha,domingo,2017_dom_08,S01.07606¡,W077.61397¡,426,Sendero 07
+jatun sacha,domingo,2017_dom_09,S01.07682¡,W077.61086¡,441,Sendero 01
+jatun sacha,domingo,2017_dom_10,S01.06399¡,W077.62957¡,386,Botanico- Rio Trail
+jatun sacha,domingo,2017_dom_11,S01.06399¡,W077.62957¡,386,Botanico- Rio Trail
+jatun sacha,domingo,2017_dom_12,S01.06399¡,W077.62957¡,386,Botanico- Rio Trail
+jatun sacha,domingo,2017_dom_13,S01.06399¡,W077.62957¡,386,Botanico- Rio Trail
+jatun sacha,domingo,2017_dom_14,S01.06662¡,W077.62788¡,401,Botanico- Fruitales
+jatun sacha,domingo,2017_dom_15,S01.06611¡,W077.61564¡,401,Trail to Organic Garden
+jatun sacha,domingo,2017_dom_16,S01.07958¡,W077.62065¡,436,Trail Across Farm
+jatun sacha,domingo,2017_dom_17,S01.08637¡,W077.61991¡,453,Trail Across Farm Past River
+jatun sacha,eximius,2017_ex_01,S01.07218¡,W077.61461¡,406,Sendero 01
+jatun sacha,eximius,2017_ex_02,S01.06624¡,S077.61561¡,400,Trail to Organic Garden
+jatun sacha,eximius,2017_ex_03,S01.07356¡,W077.61584¡,403,RA4B4- Torre
+jatun sacha,eximius,2017_ex_04,S01.07060¡,W077.61426¡,421,RA4-4- Sol 3
+jatun sacha,eximius,2017_ex_05,S01.06900¡,W077.61548¡,406,RA4-2- Sol 2
+jatun sacha,eximius,2017_ex_06_A,S01.06628¡,W077.62814¡,398,Botanico- Aleucinogena
+jatun sacha,eximius,2017_ex_06_B,S01.06628¡,W077.62814¡,398,Botanico- Aleucinogena
+jatun sacha,eximius,2017_ex_07,S01.06574¡,W077.62844¡,413,Botanico- Rio Trail
+jatun sacha,eximius,2017_ex_08,S01.07015¡,W077.62186¡,428,Farm- by fence
+jatun sacha,eximius,2017_ex_09,S01.07015¡,W077.62186¡,428,Farm- by fence
+jatun sacha,eximius,2017_ex_10,S01.06897¡,W077.62232¡,450,Farm- by cliff
+jatun sacha,eximius,2017_ex_11,S01.06591¡,W077.62074¡,407,Trail to River- Far from trail
+jatun sacha,eximius,2017_ex_12,S01.06424¡,W077.62162¡,398,Trail to River
+jatun sacha,eximius,2017_ex_13,S01.07580¡,W077.61686¡,445,RA4B-5- Farm
+jatun sacha,eximius,2017_ex_14_A,S01.08450¡,W077.61961¡,450,Trail Across Farm Past River
+jatun sacha,eximius,2017_ex_14_B,S01.08450¡,W077.61961¡,450,Trail Across Farm Past River
+jatun sacha,eximius,2017_ex_15,S01.08459¡,W077.61989¡,451,Trail Across Farm Past River
+jatun sacha,eximius,2017_ex_16,S01.08780¡,W077.62012¡,467,Trail Across Farm Past River
+jatun sacha,eximius,2017_ex_17,S01.08798¡,W077.62373¡,466,Trail Across Farm Past River
+jatun sacha,eximius,2017_ex_18,S01.08459¡,W077.61989¡,451,Trail Across Farm Past River
+jatun sacha,eximius,2017_ex_19,S01.06705,W077.61678,432,by lab
+sumaco,eximius,Exi_VL_9.1,S00.070844,W077.74856,1344,
+sumaco,eximius,Exi_VL_9.5,S00.70644,W077.74527,1323,
+sumaco,eximius,Exi_VL_10.5,S00.71244,W077.74070,1290,
+sumaco,eximius,Exi_VL_17.5,S00.70256,W077.72288,1178,
+sumaco,eximius,Exi_VL_24.0,S00.72653,W077.68410,1044,
+sumaco,eximius,Exi_VL_24.1,S00.72531,W077.68349,1048,
+sumaco,eximius,Exi_VL_29.0,S00.72007,W077.66898,1137,
+sumaco,eximius,Exi_VL_Bridge.1,S00.72281,W077.63766,1095,
+sumaco,eximius,Exi_VL_41.2,S00.71780,W077.60410,1181,
+sumaco,eximius,Exi_VL_41.4,S00.71794,W077.60210,1155,
+sumaco,eximius,Exi_VL_43.6.1,S00.70769,W077.59818,1050,
+sumaco,eximius,Exi_VL_43.6.2,S00.70697,W077.59850,1049,
+sumaco,elegans,Ele_VL_5.3,S01.07077,W077.6146,1200,
+sumaco,elegans,Ele_VL_9.5,S00.70644,W077.74527,1314,
+sumaco,elegans,Ele_VL_15.3,S00.69366,W077.73080,1056,
+sumaco,elegans,Ele_VL_17.3,S00.70171,W077.72331,1183,
+sumaco,elegans,Ele_VL_17.4,S00.70184,W077.72329,1184,
+sumaco,elegans,Ele_VL_Bridige.6,S00.72256,W077.632828,1099,
+sumaco,elegans,Ele_VL_43.6,S00.70785,W077.59817,1045,
+sumaco,elegans,Ele_VL_43.7,S00.70750,W077.59689,1048,
+sumaco,elegans,Ele_VL_20.1,S00.71730,W077.71556,1117,
+cocodrilos,ele/guac,Ele_VB_11.4,S00.66441,W77.79081,1614,
+cocodrilos,ele/guac,Ele/Guac_VB_7.8,,,1422,
+cocodrilos,guacamayos,Guac_VB_7.8,,,1422,
+cocodrilos,guacamayos,Guac_VB_8.5,,,1475,
+cocodrilos,elegans,Ele_VB_12.2,,,1664,
+cocodrilos,guacamayos,Guac_VB_15.5,S00.65157,W77.79733,1558,
+cocodrilos,guacamayos,Guac_VB_17.2,S00.64048,W77.80565,1987,
+archidona,eximius,Exi_Archi_11.8,S00.81106,W077.78031,874,
