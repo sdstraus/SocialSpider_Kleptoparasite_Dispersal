@@ -78,7 +78,7 @@ my_pal <- RColorBrewer::brewer.pal(n=6, name = "Dark2")
 
 p2 <- my_df %>% 
   rename(Site = V2) %>% 
-  ggplot( aes(x = LD1, y = LD2, color = Site, shape = Group)) +
+  ggplot( aes(x = LD1, y = LD2, color = Site)) +
   geom_point(size = 3) +
   theme_bw() +
   scale_color_manual(values=c(my_pal)) +
@@ -88,8 +88,7 @@ p2 <- my_df %>%
   # geom_text(aes(label=names), nudge_x=0.3, nudge_y=0.6)+
   stat_ellipse(inherit.aes = FALSE, mapping = aes(x = LD1, y = LD2, shape = Group), 
                level = 0.95, size = 0.5)+
-  labs(shape = "Group")+
-  guides(shape=guide_legend(ncol=2), color = guide_legend(override.aes = list(shape =  15)))+
+  # guides(shape=guide_legend(ncol=2), color = guide_legend(override.aes = list(shape =  15)))+
   cowplot::theme_cowplot()
   
 p2
@@ -319,9 +318,20 @@ my_df <- dplyr::full_join(my_df, pop.data.cleaned.js, by = c("names"="V1"))
 
 my_pal <- RColorBrewer::brewer.pal(n=12, name = "Paired")
 
+my_df <- my_df %>% mutate(Nest = str_remove(Nest, "_JS"))
+
+# reorder nest levels
+my_df <- my_df %>% mutate(Nest = as.factor(Nest))
+levels(my_df$Nest)
+
+my_df$Nest <- factor(my_df$Nest, levels = c("Exi06A", "Exi06B", "Exi07", 
+                                                  "Exi11", "Exi12", "Exi02", "Exi10", "Exi05", "Exi08", 
+                                                  "Exi14"))
+
+
 p2 <- my_df %>% 
   # rename(Nest = V2) %>% 
-  ggplot(aes(x = LD1, y = LD2, color = Nest, shape = Group)) +
+  ggplot(aes(x = LD1, y = LD2, color = Nest)) +
   geom_point(size = 3) +
   theme_bw() +
   scale_color_manual(values=c(my_pal)) +
@@ -332,9 +342,9 @@ p2 <- my_df %>%
   # geom_text(aes(label=names), nudge_x=0.3, nudge_y=0.6)+
   stat_ellipse(inherit.aes = FALSE, mapping = aes(x = LD1, y = LD2, shape = Group),
                level = 0.95, size = 0.5)+
-  guides(shape=guide_legend(ncol=2), fill = guide_legend(ncol=2), color = guide_legend(ncol=2, 
-                                                              override.aes = list(shape =  15)))+
-  labs(shape = "Group")+
+  # guides(shape=guide_legend(ncol=2), fill = guide_legend(ncol=2), color = guide_legend(ncol=1, 
+  #                                                             override.aes = list(shape =  15)))+
+  # labs(shape = "Group")+
   cowplot::theme_cowplot()
 p2
 exi.js.plot <- p2
@@ -455,13 +465,14 @@ names <- rownames(my_df)
 my_df <- cbind(names, my_df)
 my_df <- dplyr::full_join(my_df, pop.data.cleaned.archi, by = c("names"="V1"))
 
-
+# trim "Exi_Archi" off nest names
+my_df <- my_df %>% mutate(Nest = str_remove(Nest, "Exi_Archi_"))
 
 my_pal <- RColorBrewer::brewer.pal(n=7, name = "Dark2")
 
 p2 <- my_df %>% 
   # rename(Nest = V2) %>% 
-  ggplot(aes(x = LD1, y = LD2, color = Nest, shape = Group)) +
+  ggplot(aes(x = LD1, y = LD2, color = Nest)) +
   geom_point(size = 3) +
   theme_bw() +
   scale_color_manual(values=c(my_pal)) +
@@ -471,7 +482,7 @@ p2 <- my_df %>%
   # geom_text(aes(label=names), nudge_x=0.3, nudge_y=0.6)+
   stat_ellipse(inherit.aes = FALSE, mapping = aes(x = LD1, y = LD2, shape = Group), 
                level = 0.95, size = 0.5)+
-  guides(shape=guide_legend(ncol=2, order = 1), color = guide_legend(override.aes = list(shape =  15)))+
+  # guides(shape=guide_legend(ncol=2, order = 1), color = guide_legend(override.aes = list(shape =  15)))+
   labs(shape = "Group")+
   cowplot::theme_cowplot()
 p2
@@ -593,11 +604,21 @@ names <- rownames(my_df)
 my_df <- cbind(names, my_df)
 my_df <- dplyr::full_join(my_df, pop.data.cleaned.vl, by = c("names" = "V1"))
 
+# trim "Exi_VL" off nest names
+my_df <- my_df %>% mutate(Nest = str_remove(Nest, "Exi_VL_"))
+
+# reorder nest levels
+my_df$Nest <- as.factor(my_df$Nest)
+levels(my_df$Nest )
+# reorder levels
+my_df$Nest <- factor(my_df$Nest, levels = c("9.5.1", "10.5", "17.5","24.1", 
+                                                        "Bridge.1", "41.2"))
+
 my_pal <- RColorBrewer::brewer.pal(n=11, name = "Paired")
 
 p2 <- my_df %>% 
   # rename(Nest = V2) %>% 
-  ggplot(aes(x = LD1, y = LD2, color = Nest, shape = Group)) +
+  ggplot(aes(x = LD1, y = LD2, color = Nest)) +
   geom_point(size = 3) +
   theme_bw() +
   scale_color_manual(values=c(my_pal)) +
@@ -609,7 +630,7 @@ p2 <- my_df %>%
   stat_ellipse(inherit.aes = FALSE, aes(x = LD1, y = LD2, shape = Group), 
                level = 0.95, size = 0.5)+
   labs(shape = "Group")+
-  guides(shape=guide_legend(ncol=2, order = 1), color = guide_legend(override.aes = list(shape =  15)))+
+  # guides(shape=guide_legend(ncol=2, order = 1), color = guide_legend(override.aes = list(shape =  15)))+
   cowplot::theme_cowplot()
 p2
 exi.vl.plot <- p2
@@ -619,6 +640,27 @@ exi.plot <- ggpubr::ggarrange(exi.all.plot, exi.js.plot, exi.archi.plot, exi.vl.
 ggsave(exi.plot, filename = "../../figures/exi.plot.pcas.jpeg", dpi = 'retina', units = "in",
        width = 7, height = 12)
 
+## trying to make the widths all the same
+library(gtable)
+library(grid)
+library(gridExtra)
+
+# Get the gtables
+gA <- ggplotGrob(exi.all.plot)
+gB <- ggplotGrob(exi.js.plot)
+gC <- ggplotGrob(exi.archi.plot)
+gD <- ggplotGrob(exi.vl.plot)
+
+gC$widths <- gA$widths
+gB$widths <- gA$widths
+gD$widths <- gA$widths
+# Arrange the two charts.
+# The legend boxes are centered
+grid.newpage()
+jpeg(file = "../../figures/Figure3_02Sept22.jpeg", width = 6, height = 9, units = "in", res = 1000)
+grid.arrange(gA, gB, gC, gD, nrow = 4, padding = 2)
+dev.off()
+        
 tmp <- as.data.frame(dapc_l[[1]]$posterior)
 tmp$K <- my_k[1]
 tmp$Isolate <- rownames(tmp)

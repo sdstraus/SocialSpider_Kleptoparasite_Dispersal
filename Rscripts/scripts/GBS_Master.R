@@ -5,7 +5,7 @@ library(SNPRelate)
 library(tidyverse)
 library(hierfstat)
 library(poppr)
-
+library(stringr)
 library(dartR)
 
 setwd("/Users/sam/PhDThesis/GBS/Rscripts/scripts")
@@ -89,6 +89,16 @@ setPop(exi.vl) <- ~Nest
 popNames(exi.vl)
 indNames(exi.vl) %>% str_subset("Exi_VL_10.5") %>% length()
 
+# ## just js and vl
+# exi.js.vl <- popsub(gl.exi, sublist=c("JatunSacha", "ViaLoreto"))
+# indNames(exi.js.vl)
+# # remove NAs
+# toRemove <- is.na(glMean(exi.js.vl, alleleAsUnit = FALSE))
+# which(toRemove)
+# exi.js.vl <- exi.js.vl[, !toRemove]
+# setPop(exi.js.vl) <- ~Nest
+# popNames(exi.js.vl)
+
 ######### Observed Heterozygosity #########
 
 mean(gl.Ho(gl.exi))
@@ -107,7 +117,7 @@ mean(gl.He(exi.vl))
 gi.exi <- gl2gi(gl.exi)
 strata(gi.exi) <- strata_df
 
-# gi.exi <- missingno(gi.exi)
+gi.exi <- missingno(gi.exi)
 exi.rich <- PopGenReport::allel.rich(gi.exi)$mean.richness
 
 js.exi.gi <- gl2gi(exi.js)
@@ -120,6 +130,11 @@ strata(archi.exi.gi) <- strata_df %>% filter(Site == "Archidona")
 
 vl.exi.gi <- gl2gi(exi.vl)
 strata(vl.exi.gi) <- strata_df %>% filter(Site == "ViaLoreto")
+
+
+
+# jsvl.exi.gi <- gl2gi(exi.js.vl)
+# strata(jsvl.exi.gi) <- strata_df %>% filter(Site == "ViaLoreto" | Site == "JatunSacha")
 
 # 
 # x.mat <- as.matrix(exi.archi) # x is a genlight object
@@ -243,7 +258,7 @@ for(i in 1:length(strata_df$Nest)){
       strata_df$long[i] <- exi.coords$longitude[j]
     }}}
 
-## all archidona colonies share one set of coordinates (all within ~20 meters)
+## all archidona colonies share one set of coordinates (all within ~30 meters)
 row <- which(exi.coords$Nest == "Exi_Archi_11.8")
 archi.lat <- exi.coords$latitude[row]
 archi.long <- exi.coords$longitude[row]
@@ -252,9 +267,29 @@ rows <- which(strata_df$Site == "Archidona")
 strata_df$lat[rows] <- archi.lat
 strata_df$long[rows] <- archi.long
 
+## VL_9.5.1 didn't get it's coords, do manually
+row <- which(exi.coords$Nest == "Exi_VL_9.5")
+vl_9.5_lat <- exi.coords$latitude[row]
+vl_9.5.long <- exi.coords$longitude[row]
+
+rows <- which(strata_df$Cluster == "Exi_VL_9.5")
+strata_df$lat[rows] <- vl_9.5_lat
+strata_df$long[rows] <- vl_9.5.long
+
+
+# add to strata
 xy <- strata_df %>% dplyr::select(long, lat)
 gi.exi@other$xy <- xy
 gi.exi@other$xy
+
+## wait, actually removing archidona colonies to see if that makes a diff 
+#(all will have 0s for distance matrix to each other)
+
+# xy <- strata_df %>% filter(Site != "Archidona") %>% dplyr::select(long, lat)
+# jsvl.exi.gi@other$xy <- xy
+# jsvl.exi.gi@other$xy
+
+## ^^ doesn't make any real difference, so I will include in the main analysis
 
 ## setting up distance matrices 
 Dgen <- poppr::provesti.dist(gi.exi) # genetic distance
@@ -458,13 +493,44 @@ for(i in 1:length(long.dat$site)){
 long.dat <- long.dat %>% mutate(ind.num2 = as.numeric(ind.num))
 long.dat$ind.num2 <- if_else(long.dat$ind.num2 < 1.0, true = (long.dat$ind.num2*10), false = long.dat$ind.num2)
 
-long.dat <- long.dat %>% mutate(ind.num2 = as.character(ind.num2))
+long.dat <- long.dat %>% mutate(ind.num2 = as.character(ind.num2)) %>% 
+  mutate(site = as.factor(site))
+
+# rename levels within a site
+levels(long.dat$site)
+levels(long.dat$site) <- c("A", "JS", "VL")
+
+## reorder VL nest order
+long.dat <- long.dat %>% mutate(nest = as.factor(nest))
+levels(long.dat$nest)
+## archidona in numerical order
+## via loreto by km
+## js north to south/ distance from road
+long.dat$nest <- factor(long.dat$nest, levels = c("11.8.1", "11.8.2", "11.8.4", 
+                                                    "11.8.5", "9.5.1", "10.5", "17.5","24.1", 
+                                                    "Bridge.1", "41.2", "Exi06A", "Exi06B", "Exi07", 
+                                                    "Exi11", "Exi12", "Exi02", "Exi10", "Exi05", "Exi08", 
+                                                    "Exi14"))
+
+library(RColorBrewer)
+display.brewer.pal(12, "Paired")
+brewer.pal(12, "Paired")
+pal <- c("#A6CEE3", "#1F78B4", "#B2DF8A", "#33A02C", "#FB9A99", "#E31A1C")
 
 exi.admix6 <-  ggplot(long.dat, aes(x=ind.num2, y=fraction, fill=Kclust)) +
   geom_bar(stat="identity", position="stack") +
   facet_grid(. ~ site + nest, drop=TRUE, space="free", scales="free")+
-  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))+
-  labs(fill = "K cluster", y = "Ancestry", x = "Individual")
+  # theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))+
+  labs(fill = "K cluster", y = "Ancestry", x = "Individual")+
+  scale_fill_manual(values = pal)+
+  theme(panel.grid=element_blank()) +
+  theme(axis.title.x=element_blank()) +
+  theme(axis.text.x=element_blank()) +
+  theme(axis.ticks.x=element_blank()) +
+  theme(strip.background=element_blank())+
+  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
+        panel.background = element_blank(),)+
+  theme(strip.text.x.top = element_text(angle = 90))
 exi.admix6
 
 exi.admix.site.level <- ggpubr::ggarrange(exi.admix6, exi.admix15, nrow = 2)
@@ -582,9 +648,9 @@ long.dat.archi <- exi.archi.df %>% pivot_longer(cols = V1:V3, names_to = "Kclust
 long.dat.archi <- long.dat.archi %>% mutate(nest = str_remove(nest, "Exi_Archi_"))
 
 ## want just last 2 characters of individudal # (e.g. 01, 02)
-# substrRight <- function(x, n){
-#   substr(x, nchar(x)-n+1, nchar(x))
-# }
+substrRight <- function(x, n){
+  substr(x, nchar(x)-n+1, nchar(x))
+}
 
 long.dat.archi <- long.dat.archi %>% mutate(ind.num = substrRight(ind, 2))
 
@@ -646,7 +712,7 @@ exi.vl.df <- exi.vl.df[-rows,]
 long.dat.vl <- exi.vl.df %>% pivot_longer(cols = V1:V5, names_to = "Kclust", values_to = "fraction", names_prefix = "V")
 
 
-# trim "Exi_Archi" off nest names
+# trim "Exi_VL" off nest names
 long.dat.vl <- long.dat.vl %>% mutate(nest = str_remove(nest, "Exi_VL_"))
 
 # ## want just last 2 characters of individudal # (e.g. 01, 02)
@@ -656,15 +722,42 @@ substrRight <- function(x, n){
 
 long.dat.vl <- long.dat.vl %>% mutate(ind.num = substrRight(ind, 1))
 
+
+# rename levels within a site
+long.dat.vl <- long.dat.vl %>% mutate(site = as.factor(site))
+
+levels(long.dat.vl$site)
+levels(long.dat.vl$site) <- c("VL")
+
+
+long.dat.vl$nest <- as.factor(long.dat.vl$nest)
+levels(long.dat.vl$nest )
+# reorder levels
+long.dat.vl$nest <- factor(long.dat.vl$nest, levels = c("9.5", "10.5", "17.5","24.1", 
+                                                  "Bridge.1", "41.2"))
+
+RColorBrewer::display.brewer.pal(12, "Paired")
+RColorBrewer::brewer.pal(12, "Paired") # last 6, minus pale yellow
+pal <- c("#FDBF6F", "#FF7F00", "#CAB2D6", "#6A3D9A", "#B15928")
+
 exi.vl.admix <-  ggplot(long.dat.vl, aes(x=ind.num, y=fraction, fill=Kclust)) +
   geom_bar(stat="identity", position="stack") +
-  facet_grid(. ~ nest, drop=TRUE, space="free", scales="free")+
+  facet_grid(. ~ nest + site, drop=TRUE, space="free", scales="free", switch = 'x')+
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))+
-  labs(fill = "K cluster", y = "Ancestry", x = "Individual")
-exi.vl.admix <- exi.vl.admix + scale_fill_brewer(palette="Paired")
+  labs(fill = "K cluster", y = "Ancestry", x = "Individual")+
+  scale_fill_manual(values = pal)+
+  theme(panel.grid=element_blank()) +
+  theme(axis.title.x=element_blank()) +
+  theme(axis.text.x=element_blank()) +
+  theme(axis.ticks.x=element_blank()) +
+  theme(strip.background=element_blank())+
+  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
+        panel.background = element_blank(),)+
+  theme(strip.text.x.bottom = element_text(angle = 90))
 exi.vl.admix
 
-exi.within.site <- ggpubr::ggarrange(exi.admix6, exi.js.admix, exi.archi.admix, exi.vl.admix, nrow=4)
+exi.within.site <- ggpubr::ggarrange(exi.admix6, exi.js.admix, exi.archi.admix, exi.vl.admix, 
+                                     nrow=4, labels = "auto")
 ggsave(exi.within.site, filename = "../../figures/exi.within.site.jpeg", dpi = "retina",
        units = "in", width = 10, height = 11)
 
@@ -893,6 +986,15 @@ rows <- which(strata_df_n1$Site == "Archidona")
 strata_df_n1$lat[rows] <- archi.lat
 strata_df_n1$long[rows] <- archi.long
 
+## VL_9.5.1 didn't get it's coords, do manually
+row <- which(exi.coords$Nest == "Exi_VL_9.5")
+vl_9.5_lat <- exi.coords$latitude[row]
+vl_9.5.long <- exi.coords$longitude[row]
+
+rows <- which(strata_df_n1$Cluster == "Exi_VL_9.5")
+strata_df_n1$lat[rows] <- vl_9.5_lat
+strata_df_n1$long[rows] <- vl_9.5.long
+
 xy <- strata_df_n1 %>% dplyr::select(long, lat)
 gi.n1@other$xy <- xy
 gi.n1@other$xy
@@ -1008,19 +1110,50 @@ for(i in 1:length(long.dat$site)){
 long.dat <- long.dat %>% mutate(ind.num2 = as.numeric(ind.num))
 long.dat$ind.num2 <- if_else(long.dat$ind.num2 < 1.0, true = (long.dat$ind.num2*10), false = long.dat$ind.num2)
 
-long.dat <- long.dat %>% mutate(ind.num2 = as.character(ind.num2))
+long.dat <- long.dat %>% mutate(ind.num2 = as.character(ind.num2)) %>% 
+  mutate(site = as.factor(site))
+
+# rename levels within a site
+levels(long.dat$site)
+levels(long.dat$site) <- c("A", "JS", "VL")
+
+## reorder VL nest order
+long.dat <- long.dat %>% mutate(nest = as.factor(nest))
+levels(long.dat$nest)
+## archidona in numerical order
+## via loreto by km
+## js north to south/ distance from road
+long.dat$nest <- factor(long.dat$nest, levels = c("11.8.1", "11.8.3", 
+                                                  "11.8.5", "9.5.2","24.1", "Exi06B","Exi12", 
+                                                  "Exi02", "Exi08", "Exi17"))
 
 
 f1.admix <-  ggplot(long.dat, aes(x=ind.num2, y=fraction, fill=Kclust)) +
   geom_bar(stat="identity", position="stack") +
-  facet_grid(. ~ site + nest, drop=TRUE, space="free", scales="free")+
+  facet_grid(. ~ site + nest, drop=TRUE, space="free", scales="free", switch = "x")+
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))+
-  labs(fill = "K cluster", y = "Ancestry", x = "Individual")
+  labs(fill = "K cluster", y = "Ancestry", x = "Individual")+
+  scale_fill_brewer(palette = "Paired")+
+  theme(panel.grid=element_blank()) +
+  theme(axis.title.x=element_blank()) +
+  theme(axis.text.x=element_blank()) +
+  theme(axis.ticks.x=element_blank()) +
+  theme(strip.background=element_blank())+
+  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
+        panel.background = element_blank(),)+
+  theme(strip.text.x.bottom = element_text(angle = 90))
 f1.admix
 
-#admix.Plot <- ggpubr::ggarrange(exi.admix, f1.admix, labels = "auto", nrow=2)
+bottom  <- ggpubr::ggarrange(exi.vl.admix, f1.admix, labels = c("b", "c"), nrow=1)
+top <- ggpubr::ggarrange(exi.admix6, bottom, labels = c("a", ""), nrow=2)
 
+pdf(file = "../../figures/admixture_plots.pdf", height = 8, width = 12)
+top
+dev.off()
 
+jpeg(file = "../../figures/Figure5_02Sept22.jpeg", height = 8, width = 12, units = "in", res = 1000)
+top
+dev.off()
 ### f1 - js ####
 CVs <- read.table("../../admixture/f1_js/CV.csv", sep = " ")
 CVs <- CVs[, 3:4] ## drop the first two columns
@@ -1090,7 +1223,7 @@ f1.js.admix <-  ggplot(long.f1.js, aes(x=ind.num2, y=fraction, fill=Kclust)) +
 f1.js.admix
 
 
-f1.admix.plots <- ggpubr::ggarrange(f1.admix, f1.js.admix, nrow=2)
+f1.admix.plots <- ggpubr::ggarrange(f1.admix, f1.js.admix, nrow=2, labels = "auto")
 ggsave(f1.admix.plots, filename = "../../figures/f1.admix.plots.jpeg", dpi = "retina",
        units = "in", width = 10, height = 8)
 
@@ -1257,6 +1390,7 @@ for(i in 1:length(popmap$ind)){
 f2.df <- cbind(popmap, tbl)
 
 long.dat <- f2.df %>% pivot_longer(cols = V1:V2, names_to = "Kclust", values_to = "fraction", names_prefix = "V")
+
 
 p <-  ggplot(long.dat, aes(x=ind, y=fraction, fill=Kclust)) +
   geom_bar(stat="identity", position="stack") +
