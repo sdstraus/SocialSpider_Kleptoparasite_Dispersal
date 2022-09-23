@@ -149,13 +149,6 @@ write.table(F2_list, "pop_maps/F2_popmap_colony_site.txt", row.names = FALSE, co
             quote=FALSE, sep = "\t")
 
 
-# 
-# # testing out with just archidona
-# archi <- ex %>% filter(site == "Archidona")
-# archi$site <- NULL
-# write.table(ex, "archi_colony_popmap.txt", row.names = FALSE, col.names = FALSE, quote=FALSE, sep = "\t")
-# length(which(ex$site == "Archidona"))
-# 
 
 ####### Cluster ########
 # Eximius
@@ -200,36 +193,6 @@ pop.map$cluster[which(str_detect(pop.map[,3], "11.8.2")==TRUE |
                   str_detect(pop.map[,3], "11.8.3")==TRUE)] <- "Exi_Archi_cluster"
 
 
-# pop.map$cluster[which(str_detect(pop.map[,2], "Exi08")==TRUE | 
-#                         str_detect(pop.map[,2], "Exi09")==TRUE |
-#                   str_detect(pop.map[,2], "Exi10")==TRUE)] <- "farm"
-# pop.map$cluster[which(str_detect(pop.map[,2], "Exi14")==TRUE | 
-#                         str_detect(pop.map[,2], "Exi17")==TRUE)] <- "past_farm"
-# pop.map$cluster[which(str_detect(pop.map[,2], "Exi06")==TRUE | 
-#                         str_detect(pop.map[,2], "Exi07")==TRUE)] <- "jardin"
-# pop.map$cluster[which(str_detect(pop.map[,2], "Exi11")==TRUE | 
-#                         str_detect(pop.map[,2], "Exi12")==TRUE)] <- "rio"
-# pop.map$cluster[which(str_detect(pop.map[,2], "Exi19")==TRUE)] <- "cabins"
-# pop.map$cluster[which(str_detect(pop.map[,2], "Exi02")==TRUE)] <- "OG"
-# pop.map$cluster[which(str_detect(pop.map[,2], "Exi01")==TRUE)] <- "sendero1"
-# pop.map$cluster[which(str_detect(pop.map[,2], "Exi05")==TRUE)] <- "sol2"
-# 
-# #vl
-# #9.5.1 and 9.5.2 a cluster
-# pop.map$cluster[which(str_detect(pop.map[,2], "Bridge.1")==TRUE)] <- "Bridge"
-# pop.map$cluster[which(str_detect(pop.map[,2], "9.5")==TRUE)] <- "km9.5"
-# pop.map$cluster[which(str_detect(pop.map[,2], "47.3")==TRUE)] <- "km47.3"
-# pop.map$cluster[which(str_detect(pop.map[,2], "43.6")==TRUE)] <- "km43.6"
-# pop.map$cluster[which(str_detect(pop.map[,2], "41.2")==TRUE)] <- "km41.2"
-# pop.map$cluster[which(str_detect(pop.map[,2], "29.0")==TRUE)] <- "km29.0"
-# pop.map$cluster[which(str_detect(pop.map[,2], "24")==TRUE)] <- "km24"
-# pop.map$cluster[which(str_detect(pop.map[,2], "17.5")==TRUE)] <- "km17.5"
-# pop.map$cluster[which(str_detect(pop.map[,2], "10.5")==TRUE)] <- "km10.5"
-# 
-# # archi
-# #11.8.2 and 11.8.3 a cluster
-# pop.map$cluster[which(str_detect(pop.map[,2], "11.8")==TRUE)] <- "Archi"
-
 pop.map2 <- pop.map[, c(1, 2, 4, 3)]
 
 
@@ -251,23 +214,6 @@ pop.map.n1$cluster[which(str_detect(pop.map.n1[,2], "9.5")==TRUE)] <- "Exi_VL_9.
 pop.map.n1$cluster[which(str_detect(pop.map.n1[,2], "11.8.2")==TRUE | 
                         str_detect(pop.map.n1[,2], "11.8.3")==TRUE)] <- "Exi_Archi_cluster"
 
-# pop.map.n1$cluster[which(str_detect(pop.map.n1[,2], "11.8")==TRUE)] <- "Archi"
-# pop.map.n1$cluster[which(str_detect(pop.map.n1[,2], "9.5")==TRUE)] <- "km9.5"
-# pop.map.n1$cluster[which(str_detect(pop.map.n1[,2], "43.6")==TRUE)] <- "km43.6"
-# pop.map.n1$cluster[which(str_detect(pop.map.n1[,2], "24")==TRUE)] <- "km24"
-# 
-# 
-# pop.map.n1$cluster[which(str_detect(pop.map.n1[,2], "Exi19")==TRUE)] <- "cabins"
-# pop.map.n1$cluster[which(str_detect(pop.map.n1[,2], "Exi11")==TRUE | 
-#                         str_detect(pop.map.n1[,2], "Exi12")==TRUE)] <- "rio"
-# pop.map.n1$cluster[which(str_detect(pop.map.n1[,2], "Exi08")==TRUE | 
-#                         str_detect(pop.map.n1[,2], "Exi09")==TRUE |
-#                         str_detect(pop.map.n1[,2], "Exi10")==TRUE)] <- "farm"
-# pop.map.n1$cluster[which(str_detect(pop.map.n1[,2], "Exi02")==TRUE)] <- "OG"
-# pop.map.n1$cluster[which(str_detect(pop.map.n1[,2], "Exi06")==TRUE | 
-#                         str_detect(pop.map.n1[,2], "Exi07")==TRUE)] <- "jardin"
-# pop.map.n1$cluster[which(str_detect(pop.map.n1[,2], "Exi14")==TRUE | 
-#                         str_detect(pop.map.n1[,2], "Exi17")==TRUE)] <- "past_farm"
 
 pop.map2 <- pop.map.n1[, c(1, 2, 4, 3)]
 

@@ -78,7 +78,7 @@ my_pal <- RColorBrewer::brewer.pal(n=6, name = "Dark2")
 
 p2 <- my_df %>% 
   rename(Site = V2) %>% 
-  ggplot( aes(x = LD1, y = LD2, color = Site, shape = Group)) +
+  ggplot( aes(x = LD1, y = LD2, color = Site)) +
   geom_point(size = 3) +
   theme_bw() +
   scale_color_manual(values=c(my_pal)) +
@@ -88,8 +88,7 @@ p2 <- my_df %>%
   # geom_text(aes(label=names), nudge_x=0.3, nudge_y=0.6)+
   stat_ellipse(inherit.aes = FALSE, mapping = aes(x = LD1, y = LD2, shape = Group), 
                level = 0.95, size = 0.5)+
-  labs(shape = "Group")+
-  guides(shape=guide_legend(ncol=2), color = guide_legend(override.aes = list(shape =  15)))+
+  # guides(shape=guide_legend(ncol=2), color = guide_legend(override.aes = list(shape =  15)))+
   cowplot::theme_cowplot()
   
 p2
@@ -131,110 +130,6 @@ p3
 
 
 
-##### exi all - pop ~ cluster ######
-library(parallel)
-detectCores()
-
-setPop(gl.exi) <- ~Cluster
-#exi.pca.cluster <- glPca(gl.exi, nf = 3, parallel = TRUE, n.core = 4)
-
-saveRDS(exi.pca.cluster, "../rds/exi.pca.cluster.rds")
-
-exi.pca.cluster.scores <- as.data.frame(exi.pca.cluster$scores)
-exi.pca.cluster.scores$pop <- unlist(strata(gl.exi, ~Nest))
-
-maxK <- 10
-myMat <- matrix(nrow=10, ncol=(maxK))
-colnames(myMat) <- 1:ncol(myMat)
-for(i in 1:nrow(myMat)){
-  grp <- find.clusters(gl.exi, n.pca = 40, choose.n.clust = FALSE,  
-                       max.n.clust = maxK, glPca = exi.pca.cluster)
-  myMat[i,] <- grp$Kstat
-}
-
-library(ggplot2)
-library(reshape2)
-my_df <- melt(myMat)
-colnames(my_df)[1:3] <- c("Group", "K", "BIC")
-my_df$K <- as.factor(my_df$K)
-head(my_df)
-
-p1 <- ggplot(my_df, aes(x = K, y = BIC))+
-  geom_boxplot()+
-  theme_bw()+
-  xlab("Number of groups (K)")
-p1
-# exi.elbow <- p1
-# ggsave(exi.elbow, filename = "figures/exi.elbow.jpeg", dpi = "retina",
-#        units = "in", height = 4.5, width = 6)
-
-# DAPC
-my_k <- c(5)
-grp_l <- vector(mode = "list", length = length(my_k))
-dapc_l <- vector(mode = "list", length = length(my_k))
-
-for(i in 1:length(dapc_l)){
-  set.seed(9)
-  grp_l[[i]] <- find.clusters(gl.exi, n.pca = 40, n.clust = my_k[i], glPca = exi.pca.cluster)
-  dapc_l[[i]] <- dapc(gl.exi, pop = grp_l[[i]]$grp, n.pca = 40, n.da = my_k[i], glPca = exi.pca.cluster)
-  #  dapc_l[[i]] <- dapc(gl_rubi, pop = grp_l[[i]]$grp, n.pca = 3, n.da = 2)
-}
-
-
-my_df <- as.data.frame(dapc_l[[ 1 ]]$ind.coord)
-my_df$Group <- dapc_l[[ 1 ]]$grp
-head(my_df)
-
-names <- rownames(my_df)
-my_df <- cbind(names, my_df)
-
-my_pal <- RColorBrewer::brewer.pal(n=6, name = "Dark2")
-
-p2 <- ggplot(my_df, aes(x = LD1, y = LD2, color = Group, fill = Group)) +
-  geom_point(size = 4, shape = 21) +
-  theme_bw() +
-  scale_color_manual(values=c(my_pal)) +
-  # stat_ellipse(level = 0.95, size = 1) +
-  scale_fill_manual(values=c(paste(my_pal, "66", sep = "")))+
-  geom_text(aes(label=names), nudge_x=0.3, nudge_y=0.6)+
-  stat_ellipse(level = 0.95, size = 1)
-p2
-
-tmp <- as.data.frame(dapc_l[[1]]$posterior)
-tmp$K <- my_k[1]
-tmp$Isolate <- rownames(tmp)
-tmp <- melt(tmp, id = c("Isolate", "K"))
-names(tmp)[3:4] <- c("Group", "Posterior")
-tmp$Region <- pop.data.cleaned$V2
-my_df <- tmp
-
-for(i in 1:length(dapc_l)){
-  tmp <- as.data.frame(dapc_l[[i]]$posterior)
-  tmp$K <- my_k[i]
-  tmp$Isolate <- rownames(tmp)
-  tmp <- melt(tmp, id = c("Isolate", "K"))
-  names(tmp)[3:4] <- c("Group", "Posterior")
-  tmp$Region <- pop.data.cleaned$V2
-  
-  my_df <- rbind(my_df, tmp)
-}
-
-grp.labs <- paste("K =", my_k)
-names(grp.labs) <- my_k
-
-p3 <- ggplot(my_df, aes(x = Isolate, y = Posterior, fill = Group)) +
-  geom_bar(stat = "identity") +
-  facet_grid(K ~ Region, scales = "free_x", space = "free", 
-             labeller = labeller(K = grp.labs)) +
-  theme_bw() +
-  ylab("Posterior membership probability")+
-  theme(legend.position='none') +
-  #p3 <- p3 + scale_color_brewer(palette="Dark2")
-  scale_fill_manual(values=c(my_pal)) +
-  theme(axis.text.x = element_text(angle = 90, hjust = 1, size = 8))
-p3
-
-
 #### exi - all - pop ~ site #####
 setPop(gl.exi) <- ~Site
 
@@ -252,7 +147,7 @@ exi.msn.plot <- plot_poppr_msn(gl.exi, exi.msn,
 
 ggsave(exi.msn.plot, filename = "exi.msn.plot.jpeg")
 
-##### exi - js - dapc ######
+##### exi - js ######
 setPop(gl.exi) <- ~Site
 popNames(gl.exi)
 exi.js <- popsub(gl.exi, "JatunSacha")
@@ -319,9 +214,20 @@ my_df <- dplyr::full_join(my_df, pop.data.cleaned.js, by = c("names"="V1"))
 
 my_pal <- RColorBrewer::brewer.pal(n=12, name = "Paired")
 
+my_df <- my_df %>% mutate(Nest = str_remove(Nest, "_JS"))
+
+# reorder nest levels
+my_df <- my_df %>% mutate(Nest = as.factor(Nest))
+levels(my_df$Nest)
+
+my_df$Nest <- factor(my_df$Nest, levels = c("Exi06A", "Exi06B", "Exi07", 
+                                                  "Exi11", "Exi12", "Exi02", "Exi10", "Exi05", "Exi08", 
+                                                  "Exi14"))
+
+
 p2 <- my_df %>% 
   # rename(Nest = V2) %>% 
-  ggplot(aes(x = LD1, y = LD2, color = Nest, shape = Group)) +
+  ggplot(aes(x = LD1, y = LD2, color = Nest)) +
   geom_point(size = 3) +
   theme_bw() +
   scale_color_manual(values=c(my_pal)) +
@@ -332,9 +238,9 @@ p2 <- my_df %>%
   # geom_text(aes(label=names), nudge_x=0.3, nudge_y=0.6)+
   stat_ellipse(inherit.aes = FALSE, mapping = aes(x = LD1, y = LD2, shape = Group),
                level = 0.95, size = 0.5)+
-  guides(shape=guide_legend(ncol=2), fill = guide_legend(ncol=2), color = guide_legend(ncol=2, 
-                                                              override.aes = list(shape =  15)))+
-  labs(shape = "Group")+
+  # guides(shape=guide_legend(ncol=2), fill = guide_legend(ncol=2), color = guide_legend(ncol=1, 
+  #                                                             override.aes = list(shape =  15)))+
+  # labs(shape = "Group")+
   cowplot::theme_cowplot()
 p2
 exi.js.plot <- p2
@@ -387,7 +293,7 @@ plot_poppr_msn(exi.js, js.msn, palette = RColorBrewer::brewer.pal(n = nPop(exi.j
 
 
 
-##### exi - archi - dapc #######
+##### exi - archi #######
 exi.archi <- popsub(gl.exi, "Archidona")
 setPop(exi.archi) <- ~Nest
 popNames(exi.archi)
@@ -455,13 +361,14 @@ names <- rownames(my_df)
 my_df <- cbind(names, my_df)
 my_df <- dplyr::full_join(my_df, pop.data.cleaned.archi, by = c("names"="V1"))
 
-
+# trim "Exi_Archi" off nest names
+my_df <- my_df %>% mutate(Nest = str_remove(Nest, "Exi_Archi_"))
 
 my_pal <- RColorBrewer::brewer.pal(n=7, name = "Dark2")
 
 p2 <- my_df %>% 
   # rename(Nest = V2) %>% 
-  ggplot(aes(x = LD1, y = LD2, color = Nest, shape = Group)) +
+  ggplot(aes(x = LD1, y = LD2, color = Nest)) +
   geom_point(size = 3) +
   theme_bw() +
   scale_color_manual(values=c(my_pal)) +
@@ -471,7 +378,7 @@ p2 <- my_df %>%
   # geom_text(aes(label=names), nudge_x=0.3, nudge_y=0.6)+
   stat_ellipse(inherit.aes = FALSE, mapping = aes(x = LD1, y = LD2, shape = Group), 
                level = 0.95, size = 0.5)+
-  guides(shape=guide_legend(ncol=2, order = 1), color = guide_legend(override.aes = list(shape =  15)))+
+  # guides(shape=guide_legend(ncol=2, order = 1), color = guide_legend(override.aes = list(shape =  15)))+
   labs(shape = "Group")+
   cowplot::theme_cowplot()
 p2
@@ -523,7 +430,7 @@ plot_poppr_msn(exi.archi, archi.msn, palette = RColorBrewer::brewer.pal(n = nPop
 
 
 
-#### exi - vl- dapc #####
+#### exi - vl #####
 
 exi.vl <- popsub(gl.exi, sublist=c("ViaLoreto"))
 indNames(exi.vl)
@@ -593,11 +500,21 @@ names <- rownames(my_df)
 my_df <- cbind(names, my_df)
 my_df <- dplyr::full_join(my_df, pop.data.cleaned.vl, by = c("names" = "V1"))
 
+# trim "Exi_VL" off nest names
+my_df <- my_df %>% mutate(Nest = str_remove(Nest, "Exi_VL_"))
+
+# reorder nest levels
+my_df$Nest <- as.factor(my_df$Nest)
+levels(my_df$Nest )
+# reorder levels
+my_df$Nest <- factor(my_df$Nest, levels = c("9.5.1", "10.5", "17.5","24.1", 
+                                                        "Bridge.1", "41.2"))
+
 my_pal <- RColorBrewer::brewer.pal(n=11, name = "Paired")
 
 p2 <- my_df %>% 
   # rename(Nest = V2) %>% 
-  ggplot(aes(x = LD1, y = LD2, color = Nest, shape = Group)) +
+  ggplot(aes(x = LD1, y = LD2, color = Nest)) +
   geom_point(size = 3) +
   theme_bw() +
   scale_color_manual(values=c(my_pal)) +
@@ -609,7 +526,7 @@ p2 <- my_df %>%
   stat_ellipse(inherit.aes = FALSE, aes(x = LD1, y = LD2, shape = Group), 
                level = 0.95, size = 0.5)+
   labs(shape = "Group")+
-  guides(shape=guide_legend(ncol=2, order = 1), color = guide_legend(override.aes = list(shape =  15)))+
+  # guides(shape=guide_legend(ncol=2, order = 1), color = guide_legend(override.aes = list(shape =  15)))+
   cowplot::theme_cowplot()
 p2
 exi.vl.plot <- p2
@@ -619,6 +536,27 @@ exi.plot <- ggpubr::ggarrange(exi.all.plot, exi.js.plot, exi.archi.plot, exi.vl.
 ggsave(exi.plot, filename = "../../figures/exi.plot.pcas.jpeg", dpi = 'retina', units = "in",
        width = 7, height = 12)
 
+## trying to make the widths all the same
+library(gtable)
+library(grid)
+library(gridExtra)
+
+# Get the gtables
+gA <- ggplotGrob(exi.all.plot)
+gB <- ggplotGrob(exi.js.plot)
+gC <- ggplotGrob(exi.archi.plot)
+gD <- ggplotGrob(exi.vl.plot)
+
+gC$widths <- gA$widths
+gB$widths <- gA$widths
+gD$widths <- gA$widths
+# Arrange the two charts.
+# The legend boxes are centered
+grid.newpage()
+jpeg(file = "../../figures/Figure3_02Sept22.jpeg", width = 6, height = 9, units = "in", res = 1000)
+grid.arrange(gA, gB, gC, gD, nrow = 4, padding = 2)
+dev.off()
+        
 tmp <- as.data.frame(dapc_l[[1]]$posterior)
 tmp$K <- my_k[1]
 tmp$Isolate <- rownames(tmp)
