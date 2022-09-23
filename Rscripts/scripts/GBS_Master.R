@@ -10,19 +10,22 @@ library(dartR)
 
 setwd("/Users/sam/PhDThesis/GBS/Rscripts/scripts")
 
-# Eximius ####
-     #### set up genlight ###### 
+# Eximius -------------------------
+#### set up genlight ###### 
 
 # done, don't need to redo, just read in RDS
 # for eximius
 vcf <- read.vcfR("../../filtering/exi/minDP3.maxmiss.50.70.snps.recode.vcf")
-pop.data <- read.table("../../pop_maps/eximius_popmap_colony_site_cluster.txt", sep = '\t', header = FALSE)
-# 
-# 
 # #convert to genlight object
-gl.exi <- vcfR2genlight(vcf)
-ploidy(gl.exi) <- 2
+
+# gl.exi <- vcfR2genlight(vcf)
+# ploidy(gl.exi) <- 2
+
+pop.data <- read.table("../../pop_maps/eximius_popmap_colony_site_cluster.txt", sep = '\t', header = FALSE)
+gl.exi <- readRDS("../rds/gl.exi.RDS")
+
 # 
+
 # # make sure popmap matches genlight individuals
 pop.new <- as.data.frame(as.factor(indNames(gl.exi)))
 colnames(pop.new)[1] <- "Ind"
@@ -54,7 +57,7 @@ length(popNames(gl.exi))
 saveRDS(gl.exi, file="../rds/gl.exi.RDS")
 write.csv(pop.data.cleaned, "../data/eximius.pop.data.cleaned.csv")
 
-gl.exi <- readRDS("../rds/gl.exi.RDS")
+
 
 ###### Subset populations ######
 
@@ -89,15 +92,6 @@ setPop(exi.vl) <- ~Nest
 popNames(exi.vl)
 indNames(exi.vl) %>% str_subset("Exi_VL_10.5") %>% length()
 
-# ## just js and vl
-# exi.js.vl <- popsub(gl.exi, sublist=c("JatunSacha", "ViaLoreto"))
-# indNames(exi.js.vl)
-# # remove NAs
-# toRemove <- is.na(glMean(exi.js.vl, alleleAsUnit = FALSE))
-# which(toRemove)
-# exi.js.vl <- exi.js.vl[, !toRemove]
-# setPop(exi.js.vl) <- ~Nest
-# popNames(exi.js.vl)
 
 ######### Observed Heterozygosity #########
 
@@ -131,25 +125,6 @@ strata(archi.exi.gi) <- strata_df %>% filter(Site == "Archidona")
 vl.exi.gi <- gl2gi(exi.vl)
 strata(vl.exi.gi) <- strata_df %>% filter(Site == "ViaLoreto")
 
-
-
-# jsvl.exi.gi <- gl2gi(exi.js.vl)
-# strata(jsvl.exi.gi) <- strata_df %>% filter(Site == "ViaLoreto" | Site == "JatunSacha")
-
-# 
-# x.mat <- as.matrix(exi.archi) # x is a genlight object
-# x.mat[x.mat == 0] <- "1/1" # homozygote reference
-# x.mat[x.mat == 1] <- "1/2" # heterozygote
-# x.mat[x.mat == 2] <- "2/2" # homozygote alternate
-# x.gid <- df2genind(exi.archi, sep = "/", ploidy = 2)
-# 
-# gi.exi.2 <- vcfR2genind(vcf)
-# strata(gi.exi.2) <- strata_df
-# head(strata(gi.exi.2))
-# setPop(gi.exi.2) <- ~Site
-# exi.archi <- poppr::popsub(gi.exi.2, "Archidona")
-# setPop(exi.archi) <- ~Nest
-# popNames(exi.archi)
 
 saveRDS(gi.exi, file="../rds/gi.exi.RDS")
 saveRDS(js.exi.gi, file="../rds/js.exi.gi.RDS")
@@ -187,53 +162,7 @@ wc(archi.exi.gi)
 setPop(vl.exi.gi) <- ~Nest
 pop(vl.exi.gi)
 wc(vl.exi.gi)
-# 
-# #nested pop structure
-# setPop(gi.exi) <- ~Cluster/Nest
-# pop(gi.exi)
-# wc(gi.exi)
-# 
-# setPop(js.exi.gi) <- ~Nest/Cluster
-# pop(js.exi.gi)
-# wc(js.exi.gi)
-# 
-# 
-# setPop(archi.exi.gi) <- ~Nest/Cluster
-# pop(archi.exi.gi)
-# wc(archi.exi.gi)
-# 
-# setPop(vl.exi.gi) <- ~Nest/Cluster
-# pop(vl.exi.gi)
-# wc(vl.exi.gi)
-# 
-# 
-# #cluster as pop pop structure
-# setPop(gi.exi) <- ~Cluster
-# pop(gi.exi)
-# wc(gi.exi)
-# 
-# setPop(js.exi.gi) <- ~Cluster
-# pop(js.exi.gi)
-# wc(js.exi.gi)
-# 
-# setPop(archi.exi.gi) <- ~Cluster
-# pop(archi.exi.gi)
-# wc(archi.exi.gi)
-# 
-# setPop(vl.exi.gi) <- ~Cluster
-# pop(vl.exi.gi)
-# wc(vl.exi.gi)
-# 
-# #site as pop pop structure
-# setPop(gi.exi) <- ~Site
-# pop(gi.exi)
-# wc(gi.exi)
-# 
-# #cluster as pop structure
-# setPop(gi.exi) <- ~Nest/Cluster/Site
-# pop(gi.exi)
-# wc(gi.exi)
-# basic.stats(gi.exi)
+
 
 #### AMOVA #####
 
@@ -537,7 +466,8 @@ exi.admix.site.level <- ggpubr::ggarrange(exi.admix6, exi.admix15, nrow = 2)
 ggsave(exi.admix.site.level, filename = "../../figures/exi.admix.site.level.jpeg", dpi = "retina",
        units = "in", width = 12, height = 10)
 
-### exi - js ####
+####### exi - js ####### 
+
 CVs <- read.table("../../admixture/exi_js/CV.csv", sep = " ")
 CVs <- CVs[, 3:4] ## drop the first two columns
 ## Remove the formatting around the K values:
@@ -761,7 +691,7 @@ exi.within.site <- ggpubr::ggarrange(exi.admix6, exi.js.admix, exi.archi.admix, 
 ggsave(exi.within.site, filename = "../../figures/exi.within.site.jpeg", dpi = "retina",
        units = "in", width = 10, height = 11)
 
-##### Faiditius sp.1 ######
+# Faiditius sp.1 ---------------------------------
 # don't need to repeat step
 # keep code
 # 
@@ -795,6 +725,12 @@ gl.n1 <- readRDS("../rds/gl.n1.RDS")
 indNames(gl.n1) %>% length()
 setPop(gl.n1) <- ~Nest
 popNames(gl.n1) %>% length()
+
+# get full list of names -> for full filenames of individuals kept after filtering
+n1_list <- indNames(gl.n1)
+write_lines(paste(n1_list, ".*", sep =""), file = "n1_list.txt")
+
+
 
 #JS
 setPop(gl.n1) <- ~Site
@@ -879,7 +815,7 @@ strata(vl.n1.gi) <- strata_df_n1 %>% filter(Site == "ViaLoreto")
 # js.n1.gi <- readRDS("../rds/js.n1.gi.RDS")
 # archi.n1.gi <- readRDS("../rds/archi.n1.gi.RDS")
 # vl.n1.gi <- readRDS("../rds/vl.n1.gi.RDS")
-# 
+
 # Pop as Nest
 setPop(gi.n1) <- ~Site
 pop(gi.n1)
@@ -904,57 +840,10 @@ wc(archi.n1.gi)
 setPop(vl.n1.gi) <- ~Nest
 pop(vl.n1.gi)
 wc(vl.n1.gi)
-# 
-# #nested pop structure
-# setPop(gi.n1) <- ~Nest/Cluster
-# pop(gi.n1)
-# wc(gi.n1)
-# 
-# setPop(js.n1.gi) <- ~Nest/Cluster
-# pop(js.n1.gi)
-# wc(js.n1.gi)
-# 
-# setPop(archi.n1.gi) <- ~Nest/Cluster
-# pop(archi.n1.gi)
-# wc(archi.n1.gi)
-# 
-# setPop(vl.n1.gi) <- ~Nest/Cluster
-# pop(vl.n1.gi)
-# wc(vl.n1.gi)
-# 
-# 
-# #cluster as pop pop structure
-# setPop(gi.n1) <- ~Cluster
-# pop(gi.n1)
-# wc(gi.n1)
-# 
-# setPop(js.n1.gi) <- ~Cluster
-# pop(js.n1.gi)
-# wc(js.n1.gi)
-# 
-# setPop(archi.n1.gi) <- ~Cluster
-# pop(archi.n1.gi)
-# wc(archi.n1.gi)
-# 
-# setPop(vl.n1.gi) <- ~Cluster
-# pop(vl.n1.gi)
-# wc(vl.n1.gi)
-# 
-# #site as pop pop structure
-# setPop(gi.n1) <- ~Site
-# pop(gi.n1)
-# wc(gi.n1)
-# 
-# #cluster as pop pop structure
-# setPop(gi.n1) <- ~Nest/Site
-# pop(gi.n1)
-# wc(gi.n1)
+
+
 
 #### AMOVA #####
-# 
-# n1.amova.withcluster <- poppr.amova(gi.n1, ~Site/Cluster/Nest)
-# n1.test.amova.cluster <- randtest(n1.amova.withcluster)
-# plot(n1.test.amova)
 
 n1.amova <- poppr.amova(gi.n1, ~Site/Nest)
 n1.test.amova <- randtest(n1.amova)
@@ -1154,7 +1043,8 @@ dev.off()
 jpeg(file = "../../figures/Figure5_02Sept22.jpeg", height = 8, width = 12, units = "in", res = 1000)
 top
 dev.off()
-### f1 - js ####
+
+####### f1 - js ########
 CVs <- read.table("../../admixture/f1_js/CV.csv", sep = " ")
 CVs <- CVs[, 3:4] ## drop the first two columns
 ## Remove the formatting around the K values:
@@ -1227,9 +1117,7 @@ f1.admix.plots <- ggpubr::ggarrange(f1.admix, f1.js.admix, nrow=2, labels = "aut
 ggsave(f1.admix.plots, filename = "../../figures/f1.admix.plots.jpeg", dpi = "retina",
        units = "in", width = 10, height = 8)
 
-###### Faiditus sp. 2 #######
-# no need to rerun this code
-# keep this code!!
+# Faiditus sp. 2 ---------------------------
 
 vcf.f2 <- read.vcfR("../../filtering/f2/minDP3.maxmiss.40.70.snps.recode.vcf")
 pop.data.f2 <- read.table("../../pop_maps/f2_popmap_colony_site.txt", sep = '\t', header = FALSE)
@@ -1398,22 +1286,3 @@ p <-  ggplot(long.dat, aes(x=ind, y=fraction, fill=Kclust)) +
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))+
   labs(fill = "K cluster", y = "Ancestry", x = "Individual")
 p
-
-
-
-## for sup mat, need spreadsheet listing, simply, nests and their corresponding cluster
-pop.data <- read.table("../../pop_maps/eximius_popmap_colony_site_cluster.txt", sep = '\t', header = FALSE)
-pop.data <- pop.data %>% rename('Clusters' = "V3", "Nest" = "V4", "Site" = "V2")
-
-Clusters <- as.data.frame(levels(as.factor(pop.data$Clusters))) %>% rename("Clusters" = "levels(as.factor(pop.data$Clusters))")
-head(Clusters)
-
-
-Nests <- as.data.frame(levels(as.factor(pop.data$Nest))) %>% rename("Nest" = "levels(as.factor(pop.data$Nest))")
-head(Nests)
-
-
-########### subset vcf files for admixture #########
-exi.vcf <- read.vcfR("../../filtering/exi/minDP3.maxmiss.50.70.snps.recode.vcf")
-table(exi.vcf@gt)
-samples <- read.delim(file.choose())
