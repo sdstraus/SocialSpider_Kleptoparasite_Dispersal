@@ -1,0 +1,32 @@
+# output of populations script as "populations.snps.vcf"
+# for each species, run:
+
+for vcf in 60 70 80
+do
+  for maxmiss in .40 .50 .60
+	do
+	for minDP in 3 5
+	do
+		echo $vcf $maxmiss $minDP
+ 
+
+	vcftools --vcf populations.${vcf}.snps.vcf --max-missing $maxmiss \
+	--mac 3 --minDP $minDP --min-meanDP 5 \
+	--recode --recode-INFO-all \
+	--out raw.temp
+
+	vcftools --vcf raw.temp.recode.vcf --missing-indv
+
+	awk '$5 > 0.5' out.imiss | cut -f1 > lowDP.indv
+
+	vcftools --vcf raw.temp.recode.vcf \
+	--remove lowDP.indv --recode --recode-INFO-all \
+	--out minDP${minDP}.maxmiss${maxmiss}.${vcf}.snps
+
+rm raw.temp.recode.vcf
+rm out.imiss
+rm lowDP.indv
+
+done
+done
+done

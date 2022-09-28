@@ -1,0 +1,15 @@
+
+VCFtools - 0.1.17
+(C) Adam Auton and Anthony Marcketta 2009
+
+Parameters as interpreted:
+	--vcf exi/exi.scaffolds.vcf
+	--keep exi_subset.txt
+	--out exi_subset
+	--recode
+
+Keeping individuals in 'keep' list
+After filtering, kept 51 out of 99 Individuals
+Outputting VCF file...
+After filtering, kept 11067 out of a possible 11067 Sites
+Run Time = 2.00 seconds

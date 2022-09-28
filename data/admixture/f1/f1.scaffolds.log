@@ -1,0 +1,27 @@
+PLINK v2.00a3.6 AVX2 (14 Aug 2022)
+Options in effect:
+  --allow-extra-chr 0
+  --double-id
+  --make-bed
+  --out f1.scaffolds
+  --vcf f1.scaffolds.vcf
+
+Hostname: Samanthas-MBP
+Working directory: /Users/sam/UBC/PhDThesis/GBS/filtering/n1
+Start time: Mon Aug 22 10:10:34 2022
+
+Random number seed: 1661177434
+16384 MiB RAM detected; reserving 8192 MiB for main workspace.
+Using up to 4 compute threads.
+--vcf: 7379 variants scanned.
+--vcf: f1.scaffolds-temporary.pgen + f1.scaffolds-temporary.pvar.zst +
+f1.scaffolds-temporary.psam written.
+19 samples (0 females, 0 males, 19 ambiguous; 19 founders) loaded from
+f1.scaffolds-temporary.psam.
+7379 variants loaded from f1.scaffolds-temporary.pvar.zst.
+Note: No phenotype data present.
+Writing f1.scaffolds.fam ... done.
+Writing f1.scaffolds.bim ... done.
+Writing f1.scaffolds.bed ... done.
+
+End time: Mon Aug 22 10:10:34 2022

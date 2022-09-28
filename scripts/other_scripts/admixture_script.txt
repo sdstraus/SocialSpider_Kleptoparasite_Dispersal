@@ -1,0 +1,70 @@
+## need bed file for admixture, plink doesn't like chromosome numbers exceeding 23, need to rename scaffolds
+
+sed '16,$s/^/scaffold_/' minDP3.maxmiss.50.70.snps.recode.vcf > exi.scaffolds.vcf
+
+## make bed file
+./plink2 --vcf exi.scaffolds.vcf --allow-extra-chr 0 --double-id --make-bed --out exi.scaffolds
+
+cp exi.scaffolds.* ../../admixture/exi
+
+nano exi_runadmixture.sh
+
+for K in 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20; \
+do ./admixture \
+--cv=10 \
+exi.scaffolds.bed \
+$K | tee log${K}.out; \
+done
+
+./exi_runadmixture.sh
+
+grep -h CV log*out > CV.csv
+
+
+## do the same for f1
+
+
+sed '16,$s/^/scaffold_/' minDP3.maxmiss.40.70.snps.recode.vcf > f1.scaffolds.vcf
+
+## make bed file
+./plink2 --vcf f1.scaffolds.vcf --allow-extra-chr 0 --double-id --make-bed --out f1.scaffolds
+
+cp f1.scaffolds.* ../../admixture/n1
+
+nano f1_runadmixture.sh
+
+for K in 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20; \
+do ./admixture \
+--cv=10 \
+f1.scaffolds.bed \
+$K | tee log${K}.out; \
+done
+
+./f1_runadmixture.sh
+
+grep -h CV log*out > CV.csv
+
+
+
+## do the same for f2
+
+# same filtering parameters for this species
+sed '16,$s/^/scaffold_/' minDP3.maxmiss.40.70.snps.recode.vcf > f2.scaffolds.vcf
+
+## make bed file
+./plink2 --vcf f2.scaffolds.vcf --allow-extra-chr 0 --double-id --make-bed --out f2.scaffolds
+
+cp f2.scaffolds.* ../../admixture/f2
+
+nano f2_runadmixture.sh
+
+for K in 1 2 3 4 5 6 7 8 9 10 11 12; \
+do ./admixture \
+--cv=10 \
+f2.scaffolds.bed \
+$K | tee log${K}.out; \
+done
+
+./f2_runadmixture.sh
+
+grep -h CV log*out > CV.csv

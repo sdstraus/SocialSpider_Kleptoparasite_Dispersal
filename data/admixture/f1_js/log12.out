@@ -1,0 +1,45 @@
+****                   ADMIXTURE Version 1.3.0                  ****
+****                    Copyright 2008-2015                     ****
+****           David Alexander, Suyash Shringarpure,            ****
+****                John  Novembre, Ken Lange                   ****
+****                                                            ****
+****                 Please cite our paper!                     ****
+****   Information at www.genetics.ucla.edu/software/admixture  ****
+
+Cross-validation will be performed.  Folds=10.
+Random seed: 43
+Point estimation method: Block relaxation algorithm
+Convergence acceleration algorithm: QuasiNewton, 3 secant conditions
+Point estimation will terminate when objective function delta < 0.0001
+Estimation of standard errors disabled; will compute point estimates only.
+Size of G: 9x7377
+Performing five EM steps to prime main algorithm
+1 (EM) 	Elapsed: 0.016	Loglikelihood: -39119.4	(delta): 29708.1
+2 (EM) 	Elapsed: 0.015	Loglikelihood: -35768.4	(delta): 3350.98
+3 (EM) 	Elapsed: 0.016	Loglikelihood: -33562.2	(delta): 2206.24
+4 (EM) 	Elapsed: 0.019	Loglikelihood: -31574.4	(delta): 1987.76
+5 (EM) 	Elapsed: 0.016	Loglikelihood: -29690.3	(delta): 1884.07
+Initial loglikelihood: -29690.3
+Starting main algorithm
+1 (QN/Block) 	Elapsed: 0.114	Loglikelihood: -24451.8	(delta): 5238.52
+2 (QN/Block) 	Elapsed: 0.119	Loglikelihood: -24451.6	(delta): 0.217301
+3 (QN/Block) 	Elapsed: 0.125	Loglikelihood: -24451.6	(delta): 3.27418e-11
+Summary: 
+Converged in 3 iterations (0.457 sec)
+Loglikelihood: -24451.607991
+Fst divergences between estimated populations: 
+	Pop0	Pop1	Pop2	Pop3	Pop4	Pop5	Pop6	Pop7	Pop8	Pop9	Pop10	
+Pop0	
+Pop1	0.467	
+Pop2	0.427	0.530	
+Pop3	0.461	0.523	0.491	
+Pop4	0.489	0.525	0.540	0.327	
+Pop5	0.404	0.430	0.377	0.462	0.491	
+Pop6	0.465	0.587	0.557	0.500	0.480	0.530	
+Pop7	0.397	0.473	0.416	0.368	0.429	0.394	0.480	
+Pop8	0.339	0.520	0.494	0.443	0.445	0.465	0.402	0.388	
+Pop9	0.494	0.550	0.556	0.410	0.382	0.458	0.509	0.472	0.456	
+Pop10	0.407	0.491	0.434	0.432	0.474	0.409	0.437	0.359	0.421	0.480	
+Pop11	0.356	0.523	0.445	0.490	0.546	0.452	0.578	0.405	0.426	0.562	0.479	
+CV error (K=12): 0.20145
+Writing output files.
