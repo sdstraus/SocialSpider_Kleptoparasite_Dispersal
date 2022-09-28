@@ -1,0 +1,13 @@
+## Anelosimus eximius
+
+populations -P ./denovo_map/stacks-exi/ --popmap ./pop_maps/eximius_popmap_colony_site.txt -t 14 --vcf -r 70 -p 3 --min-maf 0.05
+
+
+## Faiditus cf. ululans
+
+populations -P ./denovo_map/stacks-n1/ --popmap ./pop_maps/N1_popmap_colony_site.txt -t 14 --vcf -r 70 -p 3 --min-maf 0.05
+
+
+## Faiditus cf. flavescens
+
+populations -P ./denovo_map/stacks-f2/ --popmap ./pop_maps/F2_popmap_colony_site.txt -t 14 --vcf -r 70 -p 3 --min-maf 0.05
