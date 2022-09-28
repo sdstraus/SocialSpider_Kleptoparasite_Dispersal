@@ -1,0 +1,27 @@
+PLINK v2.00a3.6 AVX2 (14 Aug 2022)
+Options in effect:
+  --allow-extra-chr 0
+  --double-id
+  --make-bed
+  --out exi.scaffolds
+  --vcf exi.scaffolds.vcf
+
+Hostname: Samanthas-MBP
+Working directory: /Users/sam/UBC/PhDThesis/GBS/filtering/exi
+Start time: Mon Aug 22 09:20:40 2022
+
+Random number seed: 1661174440
+16384 MiB RAM detected; reserving 8192 MiB for main workspace.
+Using up to 4 compute threads.
+--vcf: 11067 variants scanned.
+--vcf: exi.scaffolds-temporary.pgen + exi.scaffolds-temporary.pvar.zst +
+exi.scaffolds-temporary.psam written.
+99 samples (0 females, 0 males, 99 ambiguous; 99 founders) loaded from
+exi.scaffolds-temporary.psam.
+11067 variants loaded from exi.scaffolds-temporary.pvar.zst.
+Note: No phenotype data present.
+Writing exi.scaffolds.fam ... done.
+Writing exi.scaffolds.bim ... done.
+Writing exi.scaffolds.bed ... done.
+
+End time: Mon Aug 22 09:20:41 2022
