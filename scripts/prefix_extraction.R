@@ -262,5 +262,5 @@ f2_list <- f2_list %>%
   as.data.frame() %>% 
   rename(., name = `.`) %>% 
   mutate(., filename.1 = paste(name, ".1.fq.gz", sep = ""),
-         filename.2 = paste(name, ".2.fq.gz", sep = ""))
+         filename.2 = paste(name, ".2.fq.gz", sep = ""))            
 write.csv(f2_list, "f2_names.csv", row.names = FALSE)
