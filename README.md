@@ -1,4 +1,6 @@
 # 	Kleptoparasites of social spider colonies do not track hosts’ subdivided population structure
+[![DOI](https://zenodo.org/badge/531104949.svg)](https://zenodo.org/badge/latestdoi/531104949)
+
 
 This repository contains the scripts and associated intermediate data and rds files for the genotype-by-sequencing analysis presented in "Kleptoparasites of social spider colonies do not track hosts’ subdivided population structure"
 
